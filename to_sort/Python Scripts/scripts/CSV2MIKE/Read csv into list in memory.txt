@@ -1,0 +1,17 @@
+def ReadDacCSV():
+    """
+    <Script>
+    <Author>jga</Author>
+    <Description>test raster resample tool</Description>
+    </Script>
+    """   
+    
+    fileName=r'C:\Users\jga\Desktop\share\fmg\dac export\curvesHEAD.csv'
+    valueList=[]
+    
+    for line in open(fileName).xreadlines():
+        try:
+            splitted = line.split(',')
+            valueList.append(splitted)
+        except:
+            pass

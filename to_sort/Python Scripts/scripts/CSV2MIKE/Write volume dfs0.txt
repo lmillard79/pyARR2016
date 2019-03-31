@@ -1,0 +1,31 @@
+def WriteVolumeDfs0(outfile, result):
+    
+    startDateTime = result[0][0]
+    
+    factory = DfsFactory();
+    builder = DfsBuilder.Create("HSPF Output", "dfs Timeseries Bridge", 10000);
+
+    builder.SetDataType(1);
+    builder.SetGeographicalProjection(factory.CreateProjectionUndefined());
+    builder.SetTemporalAxis(factory.CreateTemporalNonEqCalendarAxis(eumUnit.eumUsec, startDateTime));
+
+    builder.SetItemStatisticsType(StatType.RegularStat);
+
+    item1 = builder.CreateDynamicItemBuilder();
+    item1.Set("Volume", eumQuantity.Create(eumItem.eumIVolume, eumUnit.eumUMegaLiter),DfsSimpleType.Float);
+    item1.SetValueType(DataValueType.Instantaneous);
+    item1.SetAxis(factory.CreateAxisEqD0());
+    builder.AddDynamicItem(item1.GetDynamicItemInfo());
+
+    builder.CreateFile(outfile);
+    file = builder.GetFile();
+
+    data1 = Array.CreateInstance(System.Single, 1)
+    
+    i=0
+    while i<len(result):
+        data1[0]=result[i][1]
+        file.WriteItemTimeStepNext((result[i][0] - startDateTime).TotalSeconds, data1);
+        i=i+1
+    
+    file.Close();
